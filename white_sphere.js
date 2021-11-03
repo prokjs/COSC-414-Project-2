@@ -28,6 +28,12 @@ var fragmentShaderText =
 ].join('\n');
 
 var InitDemo = function () {
+	var dragging = false;
+	var lastX = 0;
+	var lastY = 0;
+	var angleX = 0;
+	var angleY = 0;
+
 	console.log('This is working');
 
 	var canvas = document.getElementById('game-surface');
@@ -150,7 +156,7 @@ var InitDemo = function () {
 		3, // Number of elements per attribute
 		gl.FLOAT, // Type of elements
 		gl.FALSE,
-		6 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+		5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
 		3 * Float32Array.BYTES_PER_ELEMENT // Offset from the beginning of a single vertex to this attribute
 	);
 
@@ -185,9 +191,9 @@ var InitDemo = function () {
 	mat4.identity(identityMatrix);
 	var angle = 0;
 	var loop = function () {
-		angle = performance.now() / 1000 / 6 * 2 * Math.PI;
-		mat4.rotate(yRotationMatrix, identityMatrix, angle, [0, 1, 0]);
-		mat4.rotate(xRotationMatrix, identityMatrix, angle / 4, [1, 0, 0]);
+		// angle = performance.now() / 1000 / 6 * 2 * Math.PI;
+		mat4.rotate(yRotationMatrix, identityMatrix, angleY, [0, 1, 0]);
+		mat4.rotate(xRotationMatrix, identityMatrix, angleX, [1, 0, 0]);
 		mat4.mul(worldMatrix, yRotationMatrix, xRotationMatrix);
 		gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
 
@@ -198,4 +204,33 @@ var InitDemo = function () {
 		requestAnimationFrame(loop);
 	};
 	requestAnimationFrame(loop);
+	var read = function(){
+		canvas.addEventListener('mousedown', (e) => {
+			// if (color is white) {
+			dragging = true;
+			// }
+		});
+		canvas.addEventListener('mouseup', (e) => {
+			dragging = false;
+		});
+		canvas.addEventListener('mousemove', (e) => {
+			var x = e.clientX;
+			var y = e.clientY;
+			if (dragging) {
+			// The rotation speed factor
+			// dx and dy here are how for in the x or y direction the mouse moved
+			var factor = 5/canvas.clientHeight;
+			var dx = factor * (x - lastX);
+			var dy = factor * (y - lastY);
+		
+			// update the latest angle
+			angleX = angleX + dy;
+			angleY = angleY - dx;
+			}
+			// update the last mouse position
+			lastX = x;
+			lastY = y;
+		});
+	}
+	read();
 };
