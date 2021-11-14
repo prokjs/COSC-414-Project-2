@@ -64,7 +64,7 @@ var InitDemo = function () {
 	// var poisonSectionSize = new Array(numBacteria);
 	// var poisonAngleStart = new Array(numBacteria);
 	// var poisonColor = [0.5,0.1,0.9];
-
+	var data = new Uint8Array(4);
 	//Measures the current maximum number of bacteria that are present
 	var currentBacteriaNumber = 0;
 	//Array of delay between bacteria spawn
@@ -119,7 +119,7 @@ var InitDemo = function () {
 	console.log('This is working');
 
 	var canvas = document.getElementById('game-surface');
-	var gl = canvas.getContext('webgl');
+	var gl = canvas.getContext('webgl', {preserveDrawingBuffer: true} );
 
 	if (!gl) {
 		console.log('WebGL not supported, falling back on experimental-webgl');
@@ -304,6 +304,26 @@ var InitDemo = function () {
 
 		gl.drawElements(gl.TRIANGLES, sphereIndices.length/(1.107), gl.UNSIGNED_BYTE, 0);
 	}
+	
+	function click(){
+		canvas.addEventListener('click', (e) =>{
+			const rect = canvas.getBoundingClientRect();
+			
+			mouseX = e.clientX - rect.left;
+			mouseY = e.clientY - rect.top;
+			
+			var pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth; 
+			
+			var pixelY = gl.canvas.height - mouseY * gl.canvas.height/ gl.canvas.clientHeight - 1;
+			
+			gl.readPixels(pixelX,pixelY,1,1,gl.RGBA,gl.UNSIGNED_BYTE,data);
+			
+			const id = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
+			
+			console.log(data);
+		});
+	}
+	
 
 	function drawCirclePatch(startAngleX,startAngleY) {
 		circleVertexBufferObject = gl.createBuffer();
@@ -461,4 +481,5 @@ var InitDemo = function () {
 		});
 	}
 	read();
+	click();
 };
