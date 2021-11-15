@@ -33,6 +33,23 @@ var InitDemo = function () {
 	var canvas = document.getElementById('game-surface');
 	var gl = canvas.getContext('webgl');
 
+	var numBacteria;
+	var gameState = true;
+	//score variables
+	var tempClickConfirm;
+	var sectionSize = new Array(numBacteria);
+	var tempScore;
+	var totalScore;
+	var finalScore;
+	var scoretimer = Date.now();
+	//end of score variables
+
+	//wincon variables
+	var gameState = true;
+	var maxSizeReached = 0;
+	var deadCount;
+	//end of wincon variables
+
 	if (!gl) {
 		console.log('WebGL not supported, falling back on experimental-webgl');
 		gl = canvas.getContext('experimental-webgl');
@@ -198,4 +215,39 @@ var InitDemo = function () {
 		requestAnimationFrame(loop);
 	};
 	requestAnimationFrame(loop);
+
+	function score(){
+		// if there was a click on the bacteria
+		if(tempClickConfirm == true){
+			
+			//The score is higher the smaller the bacteria is on click.
+			tempScore = 30 - sectionSize[j];
+			totalScore += tempScore;
+			//Resetting scoretimer and tempClickConfirm for the next click.
+			tempClickConfirm = false;
+			//print
+			finalScore = totalScore / numBacteria;
+			//document.getElementById('curScore').innerHTML = finalScore.toFixed(2);
+		}
+    }
+
+	function winCondition(){
+		if(maxSizeReached == 2){
+			gameState = false;
+			finalScore = 0;
+			document.getElementById('gameover').innerHTML = "Game Over";
+			console.log("Game Over");
+		}
+		for(x = 0; x <= numBacteria; x++){
+			if(isDead[x] == true){
+				deadCount++;
+			}
+		}
+		if (deadCount == numBacteria+1){
+			document.getElementById('uwin').innerHTML = "You Win!";
+			gameState = false;
+		}else{
+			deadCount = 0;
+		}
+	}
 };
