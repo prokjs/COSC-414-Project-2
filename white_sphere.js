@@ -85,6 +85,20 @@ var InitDemo = function () {
 	var isDead = new Array(numBacteria);
 	var isMaxSize = new Array(numBacteria);
 
+	//score variables
+	var tempClickConfirm;
+	var tempScore;
+	var totalScore;
+	var finalScore;
+	var scoretimer = Date.now();
+	//end of score variables
+
+	//wincon variables
+	var gameState = true;
+	var maxSizeReached = 0;
+	var deadCount;
+	//end of wincon variables
+
 
 	generateBacteria(numBacteria);
 	bacteriaDelay(numBacteria);
