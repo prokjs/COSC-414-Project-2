@@ -328,7 +328,24 @@ var InitDemo = function () {
 			const id = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
 			
 			console.log(data);
+			
+			detect()
 		});
+	}
+	
+	function detect(){
+			for(j = 0; j < colorStart.length; j++){
+				tempData = [(data[0]/255).toFixed(2),(data[1]/255).toFixed(2),(data[2]/255).toFixed(2)]
+				if((data[0]/255).toFixed(2) <= colorStart[j][0] + 0.1 & (data[0]/255).toFixed(2) >= colorStart[j][0] - 0.1
+				& (data[1]/255).toFixed(2) <= colorStart[j][1] + 0.1 & (data[1]/255).toFixed(2) >= colorStart[j][1] - 0.1 
+				& (data[2]/255).toFixed(2) <= colorStart[j][2] + 0.1 & (data[2]/255).toFixed(2) >= colorStart[j][2] - 0.1){
+					
+					isDead[j] = true;
+					circleSize[j] = 0;
+					
+				}
+			}
+		
 	}
 	
 
