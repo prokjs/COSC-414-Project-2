@@ -176,8 +176,8 @@ var InitDemo = function () {
 	function generateBacteria(numBacteria) {
 		for (i = 0; i <= numBacteria; i++) {
 			//The random angle that the bacteria starts at
-			xAngle[i] = Math.round(Math.random() * 3.1419592 * 100) / 100;
-			yAngle[i] = Math.round(Math.random() * 3.1419592 * 100) / 100;
+			xAngle[i] = Math.round(Math.random() * 2 * 3.1419592 * 100) / 100;
+			yAngle[i] = Math.round(Math.random() * 2 * 3.1419592 * 100) / 100;
 			//The random color of the bacteria
 			colorStart[i] = [(0.1+Math.random()).toFixed(2),(0.1+Math.random()).toFixed(2),(0.1+Math.random()).toFixed(2)];
 			//Initializing last recorded time of section size change per bacteria
@@ -244,13 +244,6 @@ var InitDemo = function () {
 		for (var i = 1.0; i <= sSize; i += 1) {
 			//Compute the angle in radians for each triangle in the circle
 			var theta = startAngle + (i * Math.PI / pieceSize);
-
-			// //Store the outer angles of bacteria in degrees
-			// if (sign == -1) {
-			// 	leftAngle[k] = Math.round(theta * 180 / Math.PI);
-			// } else {
-			// 	rightAngle[k] = Math.round(theta * 180 / Math.PI);
-			// }
 
 			//Compute vertices of each triangle
 			var vert1 = [
@@ -482,4 +475,38 @@ var InitDemo = function () {
 	}
 	read();
 	click();
+	function score(){
+		// if there was a click on the bacteria
+		if(tempClickConfirm == true){
+			
+			//The score is higher the smaller the bacteria is on click.
+			tempScore = 30 - sectionSize[j];
+			totalScore += tempScore;
+			//Resetting scoretimer and tempClickConfirm for the next click.
+			tempClickConfirm = false;
+			//print
+			finalScore = totalScore / numBacteria;
+			//document.getElementById('curScore').innerHTML = finalScore.toFixed(2);
+		}
+    }
+
+	function winCondition(){
+		if(maxSizeReached == 2){
+			gameState = false;
+			finalScore = 0;
+			document.getElementById('gameover').innerHTML = "Game Over";
+			console.log("Game Over");
+		}
+		for(x = 0; x <= numBacteria; x++){
+			if(isDead[x] == true){
+				deadCount++;
+			}
+		}
+		if (deadCount == numBacteria+1){
+			document.getElementById('uwin').innerHTML = "You Win!";
+			gameState = false;
+		}else{
+			deadCount = 0;
+		}
+	}
 };
