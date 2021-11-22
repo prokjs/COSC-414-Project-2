@@ -86,10 +86,10 @@ var InitDemo = function () {
 	var isMaxSize = new Array(numBacteria);
 
 	//score variables
-	var tempClickConfirm;
-	var tempScore;
-	var totalScore;
-	var finalScore;
+	var tempClickConfirm = true;
+	var tempScore = 0;
+	var totalScore = 0;
+	var finalScore = 0;
 	var scoretimer = Date.now();
 	//end of score variables
 
@@ -329,7 +329,8 @@ var InitDemo = function () {
 			
 			console.log(data);
 			
-			detect()
+			detect();
+			
 		});
 	}
 	
@@ -339,7 +340,9 @@ var InitDemo = function () {
 				if((data[0]/255).toFixed(2) <= colorStart[j][0] + 0.1 & (data[0]/255).toFixed(2) >= colorStart[j][0] - 0.1
 				& (data[1]/255).toFixed(2) <= colorStart[j][1] + 0.1 & (data[1]/255).toFixed(2) >= colorStart[j][1] - 0.1 
 				& (data[2]/255).toFixed(2) <= colorStart[j][2] + 0.1 & (data[2]/255).toFixed(2) >= colorStart[j][2] - 0.1){
-					
+					tempClickConfirm = true;
+					score();
+					console.log(numBacteria + " " + circleSize[j]);
 					isDead[j] = true;
 					circleSize[j] = 0;
 					
@@ -449,6 +452,7 @@ var InitDemo = function () {
 			if (circleSize[i] >= 1.1) {
 				circleSize[i] = 0.0;
 			}
+			winCondition();
 			// if(poison == true){
 				
 			// 	if(poisonSectionSize[i] <= 360){
@@ -511,13 +515,13 @@ var InitDemo = function () {
 		if(tempClickConfirm == true){
 			
 			//The score is higher the smaller the bacteria is on click.
-			tempScore = 30 - sectionSize[j];
+			tempScore = 1 - circleSize[j];
 			totalScore += tempScore;
 			//Resetting scoretimer and tempClickConfirm for the next click.
 			tempClickConfirm = false;
 			//print
 			finalScore = totalScore / numBacteria;
-			//document.getElementById('curScore').innerHTML = finalScore.toFixed(2);
+			document.getElementById('curScore').innerHTML = finalScore.toFixed(2);
 		}
     }
 
