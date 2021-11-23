@@ -38,8 +38,6 @@ var InitDemo = function () {
 	var sphereIndices;
 	var circleVertices;
 	var circleIndices;
-	var poisonSphereVertices;
-	var poisonSphereIndices;
 
 	//Rate that radius of bacteria grows at
 	const RADIUS_PER_SECOND = 0.01;
@@ -66,10 +64,9 @@ var InitDemo = function () {
 	var poisonSphereSize = new Array(numBacteria);
 	var poisonAngleX = new Array(numBacteria);
 	var poisonAngleY = new Array(numBacteria);
-	var poisonColor = [0.5,0.1,0.9];
 	var data = new Uint8Array(4);
 	//Measures the current maximum number of bacteria that are present
-	var currentBacteriaNumber = 1;
+	var currentBacteriaNumber = 0;
 	//Array of delay between bacteria spawn
 	var delayPerBacteria = new Array(numBacteria);
 	
@@ -84,7 +81,6 @@ var InitDemo = function () {
 	//Keeps track of outer angle of bacteria
 	var xAngle = new Array(numBacteria);
 	var yAngle = new Array(numBacteria);
-	var bacteriaType = [0, Math.PI, 2*Math.PI];
 
 	var isDead = new Array(numBacteria);
 	var isMaxSize = new Array(numBacteria);
@@ -94,7 +90,6 @@ var InitDemo = function () {
 	var tempScore;
 	var totalScore;
 	var finalScore;
-	var scoretimer = Date.now();
 	//end of score variables
 
 	//wincon variables
@@ -369,13 +364,11 @@ var InitDemo = function () {
 	}
 
 	function updatePoisonRadiusSize(radiusSize, j) {
-		// if(gameState == true){
-			var now = Date.now();
+		var now = Date.now();
 
-			var time = now - last[j];
-			last[j] = now;
-			return (radiusSize - (POISONRADIUS_PER_SECOND * time) / 100.0);
-		// }
+		var time = now - last[j];
+		last[j] = now;
+		return (radiusSize - (POISONRADIUS_PER_SECOND * time) / 100.0);
 	}
 
 	//Check if the delay time has been met so that another bacteria can spawn
@@ -488,9 +481,7 @@ var InitDemo = function () {
 
 	var read = function(){
 		canvas.addEventListener('mousedown', (e) => {
-			// if (color is white) {
 			dragging = true;
-			// }
 		});
 		canvas.addEventListener('mouseup', (e) => {
 			dragging = false;
@@ -521,7 +512,7 @@ var InitDemo = function () {
 		if(tempClickConfirm == true){
 			
 			//The score is higher the smaller the bacteria is on click.
-			tempScore = (1.0 - circleSize[j])*100;
+			tempScore = Math.round((1.0 - circleSize[j])*100);
 			totalScore += tempScore;
 			//Resetting scoretimer and tempClickConfirm for the next click.
 			tempClickConfirm = false;
@@ -536,7 +527,6 @@ var InitDemo = function () {
 			gameState = false;
 			finalScore = 0;
 			document.getElementById('gameover').innerHTML = "Game Over";
-			// console.log("Game Over");
 		}
 		for(x = 0; x <= numBacteria; x++){
 			if(isDead[x] == true){
